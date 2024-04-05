@@ -953,6 +953,7 @@ static void debug_music_entry(music_db_entry_t *song)
     log_body_misc("ultimate", "ultimate_list_jubeat_plus = %d", song->ultimate_list_jubeat_plus);
     log_body_misc("ultimate", "ultimate_list_jubeat_2020 = %d", song->ultimate_list_jubeat_2020);
     log_body_misc("ultimate", "ultimate_list_jukebeat = %d", song->ultimate_list_jukebeat);
+    log_body_misc("ultimate", "ultimate_list_western = %d", song->ultimate_list_western);
 }
 
 enum music_load_res {
@@ -1037,7 +1038,7 @@ music_db_filtered_list(const char *func, int limit, int *results, music_filter_f
             "ultimate", "%s could have returned %d but capped at %d", func, found, returned);
     }
 
-    log_body_misc("ultimate", "%s(%d, %p) -> %d", func, limit, results, returned);
+    // log_body_misc("ultimate", "%s(%d, %p) -> %d", func, limit, results, returned);
 
     return returned;
 }
@@ -1126,6 +1127,7 @@ static enum music_load_res music_load_individual(int index, void *node)
     song->ultimate_list_jubeat_plus = 0;
     song->ultimate_list_jubeat_2020 = 0;
     song->ultimate_list_jukebeat = 0;
+    song->ultimate_list_western = 0;
 
     property_node_refer(nullptr, node, "/music_id", PROP_TYPE_s32, &song->music_id, 4);
     property_node_refer(nullptr, node, "/parent_id", PROP_TYPE_s32, &song->parent_id, 4);
@@ -1161,6 +1163,7 @@ static enum music_load_res music_load_individual(int index, void *node)
     property_node_refer( nullptr, node, "ultimate/jubeat_plus", PROP_TYPE_u8, &song->ultimate_list_jubeat_plus, 1);
     property_node_refer( nullptr, node, "ultimate/jubeat_2020", PROP_TYPE_u8, &song->ultimate_list_jubeat_2020, 1);
     property_node_refer(nullptr, node, "ultimate/jukebeat", PROP_TYPE_u8, &song->ultimate_list_jukebeat, 1);
+    property_node_refer(nullptr, node, "ultimate/western", PROP_TYPE_u8, &song->ultimate_list_western, 1);
     song->grouping_category = strtoul(tmp, nullptr, 16);
     property_node_refer(
         nullptr, node, "/title_name", PROP_TYPE_str, song->title_name, sizeof(song->title_name));
@@ -1699,7 +1702,7 @@ static bool __cdecl music_db_is_possession_for_contained_music_list(uint8_t flag
         (flags - data_start) > 0x1000000)
     {
         hot_music = flags;
-        log_body_misc("ultimate", "hot_music found at %p", hot_music);
+        // log_body_misc("ultimate", "hot_music found at %p", hot_music);
     }
 
     // log_body_misc("ultimate", "%s(%p, %d)", __func__, flags, id);

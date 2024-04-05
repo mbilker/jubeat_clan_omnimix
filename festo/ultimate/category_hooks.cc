@@ -140,8 +140,8 @@ void category_hooks_add_category_layouts(std::vector<category_listing_t> listing
 }
 
 void write_u32(HANDLE process, void *target, uint32_t replace) {
-    uint32_t orig = *reinterpret_cast<uint32_t*>(target);
-    log_info("write_u32 %08X -> %08X", orig, replace);
+    // uint32_t orig = *reinterpret_cast<uint32_t*>(target);
+    // log_info("write_u32 %08X -> %08X", orig, replace);
     memory_write(process, target, {U32_TO_CONST_BYTES_LE(replace)});
 }
 
@@ -175,7 +175,7 @@ void category_hooks_init(HANDLE process, const MODULEINFO &jubeat_info) {
         {   1,    1,    0,    0,    0,    0,    1,    1}
     ) + 2;
     category_listing_t *orig_category_listing = *reinterpret_cast<category_listing_t**>(orig_category_listing_use);
-    log_info("orig_category_listing at %p", orig_category_listing);
+    // log_info("orig_category_listing at %p", orig_category_listing);
 
     // populate the hook array with the original data
     hook_category_listing.insert(hook_category_listing.end(), &orig_category_listing[0], &orig_category_listing[ORIG_LISTING_SZ]);
@@ -229,14 +229,14 @@ void category_hooks_init(HANDLE process, const MODULEINFO &jubeat_info) {
     do_patch(process, jubeat_info, category_array_patch_2);
     do_patch(process, jubeat_info, category_count_patch);
 
-    log_info("Hooked categories:");
-    for(auto &cat: hook_category_listing) {
-        log_info("  %d %d", cat.id, cat.column_count);
-        auto cols = cat.columns;
-        for(size_t j = 0; j < 16; j++) {
-            log_info("    %d %d %d", cols[j][0],cols[j][1],cols[j][2]);
-        }
-    }
+    // log_info("Hooked categories:");
+    // for(auto &cat: hook_category_listing) {
+    //     log_info("  %d %d", cat.id, cat.column_count);
+    //     auto cols = cat.columns;
+    //     for(size_t j = 0; j < 16; j++) {
+    //         log_info("    %d %d %d", cols[j][0],cols[j][1],cols[j][2]);
+    //     }
+    // }
 
     // group hooks
 

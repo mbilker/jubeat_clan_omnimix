@@ -12,7 +12,7 @@ enum custom_sort_id: uint32_t {
     SORT_CUSTOM_ULTIMATE = SORT_DEFAULT_MAX_ID,
     SORT_CUSTOM_OMNIMIX,
     SORT_CUSTOM_JUBEAT_PLUS,
-    SORT_CUSTOM_JUBEAT_2020,
+    // SORT_CUSTOM_JUBEAT_2020,
     SORT_CUSTOM_JUKEBEAT,
     SORT_CUSTOM_WESTERN,
 
@@ -67,11 +67,11 @@ static bool __cdecl custom_filter_jubeat_plus(unsigned music_id, int diff, uint8
     return music->ultimate_list_jubeat_plus;
 }
 
-static bool __cdecl custom_filter_jubeat_2020(unsigned music_id, int diff, uint8_t level) {
-    music_db_entry_t *music = music_from_id(music_id);
+// static bool __cdecl custom_filter_jubeat_2020(unsigned music_id, int diff, uint8_t level) {
+//     music_db_entry_t *music = music_from_id(music_id);
 
-    return music->ultimate_list_jubeat_2020;
-}
+//     return music->ultimate_list_jubeat_2020;
+// }
 
 static bool __cdecl custom_filter_jukebeat(unsigned music_id, int diff, uint8_t level) {
     music_db_entry_t *music = music_from_id(music_id);
@@ -82,8 +82,7 @@ static bool __cdecl custom_filter_jukebeat(unsigned music_id, int diff, uint8_t 
 static bool __cdecl custom_filter_western(unsigned music_id, int diff, uint8_t level) {
     music_db_entry_t *music = music_from_id(music_id);
 
-    // TODO: this needs metadata
-    return music->ultimate_list_jukebeat;
+    return music->ultimate_list_jukebeat || music->ultimate_list_western;
 }
 
 static bool __cdecl custom_filter_0_9(unsigned music_id, int diff, uint8_t level) {
@@ -128,7 +127,7 @@ const std::vector<category_hierarchy_t> extra_category_hierarchy = {
     {SORT_CUSTOM_ULTIMATE,    SORT_ROOT,            NULL,                      "UL_ROOT.png", NULL, NULL},
     {SORT_CUSTOM_OMNIMIX,     SORT_CUSTOM_ULTIMATE, custom_filter_omnimix,     "UL_SORT_GAME_OMNI.png", NULL, NULL},
     {SORT_CUSTOM_JUBEAT_PLUS, SORT_CUSTOM_ULTIMATE, custom_filter_jubeat_plus, "UL_SORT_GAME_JBPLUS.png", NULL, NULL},
-    {SORT_CUSTOM_JUBEAT_2020, SORT_CUSTOM_ULTIMATE, custom_filter_jubeat_2020, "UL_SORT_GAME_JB2020.png", NULL, NULL},
+    // {SORT_CUSTOM_JUBEAT_2020, SORT_CUSTOM_ULTIMATE, custom_filter_jubeat_2020, "UL_SORT_GAME_JB2020.png", NULL, NULL},
     {SORT_CUSTOM_JUKEBEAT,    SORT_CUSTOM_ULTIMATE, custom_filter_jukebeat,    "UL_SORT_GAME_JUKEBEAT.png", NULL, NULL},
     {SORT_CUSTOM_WESTERN,     SORT_CUSTOM_ULTIMATE, custom_filter_western,     "UL_SORT_WESTERN.png", NULL, NULL},
     {SORT_CUSTOM_ABC,         SORT_CATEGORY_NAME,   NULL,                      "UL_SORT_T9_ABC.png", NULL, NULL},
@@ -172,25 +171,26 @@ const std::vector<category_listing_t> extra_category_layout = {
     // totally new folder
     {SORT_CUSTOM_ULTIMATE, 3, {
         {}, // leave first column blank
-        {SORT_CUSTOM_OMNIMIX, SORT_CUSTOM_JUBEAT_PLUS, SORT_CUSTOM_JUBEAT_2020},
-        {SORT_CUSTOM_JUKEBEAT, SORT_CUSTOM_WESTERN},
+        {SORT_NULL, SORT_CUSTOM_OMNIMIX, SORT_CUSTOM_JUBEAT_PLUS, /*SORT_CUSTOM_JUBEAT_2020*/},
+        {SORT_NULL, SORT_CUSTOM_JUKEBEAT, SORT_CUSTOM_WESTERN},
     }},
     // Ultimate invalidates a lot of existing categories and adds our own.
     // Custom categories are prepended to the list, so we can totally replace
     // them by fully specifying it here
-    {SORT_ROOT, 4, {
+    {SORT_ROOT, 5, {
         // SORT_ROOT in SORT_ROOT is the "Select a category" icon
-        {SORT_ROOT, SORT_CUSTOM_ULTIMATE, SORT_ALL},
-        {SORT_CATEGORY_VERSION, SORT_CATEGORY_GENRE, SORT_CATEGORY_LEVEL},
-        {SORT_CATEGORY_NAME, SORT_CATEGORY_ARTIST, SORT_HOLD},
-        {SORT_TUNE_RUN, SORT_THIS_WEEK_RECOMMENDED, SORT_TARGET_MUSIC},
+        {SORT_ROOT, SORT_CUSTOM_ULTIMATE, SORT_CUSTOM_WESTERN},
+        {SORT_ALL, SORT_CATEGORY_VERSION, SORT_CATEGORY_GENRE},
+        {SORT_CATEGORY_LEVEL, SORT_CATEGORY_NAME, SORT_CATEGORY_ARTIST},
+        {SORT_HOLD, SORT_TARGET_MUSIC, SORT_THIS_WEEK_RECOMMENDED},
+        {SORT_TUNE_RUN},
     }},
     {SORT_CATEGORY_VERSION, 5, {
         {SORT_NULL, SORT_VER_jubeat, SORT_VER_ripples},
         {SORT_VER_knit, SORT_VER_copious, SORT_VER_saucer},
         {SORT_VER_saucer_fulfill, SORT_VER_prop, SORT_VER_Qubell},
         {SORT_VER_clan, SORT_VER_festo, SORT_CUSTOM_JUKEBEAT},
-        {SORT_CUSTOM_JUBEAT_2020, SORT_CUSTOM_JUBEAT_PLUS},
+        {/*SORT_CUSTOM_JUBEAT_2020,*/ SORT_CUSTOM_JUBEAT_PLUS},
     }},
 
     {SORT_CATEGORY_NAME, 7, {
