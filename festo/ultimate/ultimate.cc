@@ -212,9 +212,6 @@ static std::vector<const char *> BNR_TEXTURES {
     "L44FO_BNR_J_EX_002",
     "L44FO_BNR_J_EX_003",
     "L44FO_BNR_J_EX_004",
-    "L44FO_BNR_J_UL_001",
-    "L44FO_BNR_J_UL_002",
-    "L44FO_BNR_J_UL_003",
 };
 
 // markers and backgrounds
@@ -223,14 +220,14 @@ static std::vector<const char *> EXTRA_MARKERS {
 };
 static std::vector<const char *> EXTRA_BACKGROUNDS {
     "L44FO_PLAY_BACKGROUND_OM",
-    // "L44FO_PLAY_BACKGROUND_UL_01",
-    // "L44FO_PLAY_BACKGROUND_UL_02",
-    // "L44FO_PLAY_BACKGROUND_UL_03",
+    "L44FO_PLAY_BACKGROUND_UL_01",
+    "L44FO_PLAY_BACKGROUND_UL_02",
+    "L44FO_PLAY_BACKGROUND_UL_03",
 };
 static std::vector<const char *> EXTRA_BG_CHANGES {
     "L44FO_STG_BG_CHANGE_OM",
-    // "L44FO_STG_BG_CHANGE_UL_01",
-    // "L44FO_STG_BG_CHANGE_UL_02",
+    "L44FO_STG_BG_CHANGE_UL_01",
+    "L44FO_STG_BG_CHANGE_UL_02",
 };
 
 // ultimate categories/folders
