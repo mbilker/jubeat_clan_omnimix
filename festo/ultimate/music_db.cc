@@ -1034,8 +1034,8 @@ music_db_filtered_list(const char *func, int limit, int *results, music_filter_f
     }
 
     if (found != returned) {
-        log_body_warning(
-            "ultimate", "%s could have returned %d but capped at %d", func, found, returned);
+        // log_body_warning(
+        //     "ultimate", "%s could have returned %d but capped at %d", func, found, returned);
     }
 
     // log_body_misc("ultimate", "%s(%d, %p) -> %d", func, limit, results, returned);

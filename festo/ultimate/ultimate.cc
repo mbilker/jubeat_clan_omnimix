@@ -218,17 +218,6 @@ static std::vector<const char *> BNR_TEXTURES {
 static std::vector<const char *> EXTRA_MARKERS {
     "L44_TM_BANNER_OM",
 };
-static std::vector<const char *> EXTRA_BACKGROUNDS {
-    "L44FO_PLAY_BACKGROUND_OM",
-    "L44FO_PLAY_BACKGROUND_UL_01",
-    "L44FO_PLAY_BACKGROUND_UL_02",
-    "L44FO_PLAY_BACKGROUND_UL_03",
-};
-static std::vector<const char *> EXTRA_BG_CHANGES {
-    "L44FO_STG_BG_CHANGE_OM",
-    "L44FO_STG_BG_CHANGE_UL_01",
-    "L44FO_STG_BG_CHANGE_UL_02",
-};
 
 // ultimate categories/folders
 static std::vector<const char *> EXTRA_CATEGORIES {
@@ -394,14 +383,12 @@ bool __cdecl ultimate_dll_entry_init(char *sid_code, void *app_config)
     do_patch(process, jubeat_info, smc_mm_hierarchy_ko);
     */
 
-    hook_sound(process);
+    // hook_sound(process);
     hook_music_db(process, jubeat_handle, music_db_handle);
     hook_pkfs_fs_open(process, pkfs_handle);
     bnr_hook_init(jubeat_info);
     bnr_hook_add_paths("L44_BNR_BIG_ID99999999", BNR_TEXTURES);
     bnr_hook_add_paths("L44_TM_BANNER", EXTRA_MARKERS);
-    bnr_hook_add_paths("L44FO_PLAY_BACKGROUND", EXTRA_BACKGROUNDS);
-    bnr_hook_add_paths("L44FO_STG_BG_CHANGE", EXTRA_BG_CHANGES);
     bnr_hook_add_paths("L44FO_SMC_MM_TEXT_JA", EXTRA_CATEGORIES);
     festo_apply_common_patches(process, jubeat_handle, jubeat_info, music_db_info);
 
