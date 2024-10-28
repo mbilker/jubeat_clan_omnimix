@@ -54,7 +54,7 @@ void init() {
 */
 
 // selecting a category
-enum folder_sort_id: uint32_t {
+enum folder_sort_id : uint32_t {
     SORT_NULL = 0, // empty tile with nothing to click on
     SORT_ROOT = 1,
     SORT_ALL = 2,
@@ -96,12 +96,12 @@ enum folder_sort_id: uint32_t {
     SORT_FULLCOMBO_CHALLENGE = 38,
     SORT_CATEGORY_PERFORMANCE = 39,
     SORT_UNPLAYED = 40,
-    SORT_IS_FULL_COMBO1 = 41,
-    SORT_IS_FULL_COMBO2 = 42,
-    SORT_IS_NO_GRAY1 = 43,
-    SORT_IS_NO_GRAY2 = 44,
-    SORT_IS_ALL_YELLOW1 = 45,
-    SORT_IS_ALL_YELLOW2 = 46,
+    SORT_NOT_FULL_COMBO = 41,
+    SORT_HAS_FULL_COMBO = 42,
+    SORT_SOME_GRAY = 43,
+    SORT_NO_GRAY = 44,
+    SORT_NOT_ALL_YELLOW = 45,
+    SORT_HAS_ALL_YELLOW = 46,
     SORT_RANK_E = 47,
     SORT_RANK_D = 48,
     SORT_RANK_C = 49,
@@ -112,7 +112,7 @@ enum folder_sort_id: uint32_t {
     SORT_RANK_SSS = 54,
     SORT_RANK_EXC = 55,
     SORT_MYBEST = 56,
-    SORT_CATEGORY_TOURNAMENT_PARTICIPATION = 57,
+    SORT_CATEGORY_TOURNAMENT = 57,
     SORT_TOURNAMENT_1 = 58,
     SORT_TOURNAMENT_2 = 59,
     SORT_TOURNAMENT_3 = 60,
@@ -167,6 +167,8 @@ enum folder_sort_id: uint32_t {
     SORT_SHOP = 114,
     SORT_PJ_MATCH = 115,
     SORT_TUNE_RUN = 118,
+    SORT_TUNE_RUN_1 = 119,
+    SORT_TUNE_RUN_2 = 120,
     SORT_TARGET_MUSIC = 121,
     SORT_THIS_WEEK_RECOMMENDED = 122,
 
@@ -255,7 +257,7 @@ enum song_group_id {
     GROUP_DEFAULT_MAX_ID,
 };
 
-typedef bool (__cdecl *music_sort_function)(unsigned music_id, int diff, uint8_t level);
+typedef bool(__cdecl *music_sort_function)(unsigned music_id, int diff, uint8_t level);
 
 typedef struct {
     // not enum folder_sort_id as the extra casts for custom values suck
@@ -290,16 +292,23 @@ typedef struct {
     uint8_t level;
     uint8_t level_detail;
     uint8_t _unk0;
-    const char* _unk1;
-    const char* LabDBSeqName;
+    const char *_unk1;
+    const char *LabDBSeqName;
     int _unk2;
     int LabDBNo;
     uint8_t _unk3;
     bool has_rival; // unsure
     uint8_t _unk4;
     uint8_t _unk5;
-    void* sequence_record_set;
+    void *sequence_record_set;
 } music_info_for_grouping_t;
+
+typedef struct {
+    uint32_t id;     // folder_sort_id
+    uint32_t parent; // folder_sort_id
+    int flags;       // 0: root, 1: branch, 2: leaf
+    const char *texture_basename;
+} hierarchy_texture_t;
 
 // must be called before category_hooks_init
 void category_hooks_add_category_definitions(std::vector<category_hierarchy_t> categories);
@@ -309,7 +318,8 @@ void category_hooks_add_group_textures(std::vector<grouping_textures_t> groups);
 
 // no custom group_type for now, so use the actual enum. Return GROUP_INVALID if
 // you want a later hook or the default game function to handle it.
-typedef uint32_t (__fastcall *category_group_hook_fn_t)(enum group_type group_type, const music_info_for_grouping_t *info);
+typedef uint32_t(__fastcall *category_group_hook_fn_t)(
+    enum group_type group_type, const music_info_for_grouping_t *info);
 void category_hooks_add_grouping_hook_fn(category_group_hook_fn_t hook);
 
 void category_hooks_init(HANDLE process, const MODULEINFO &jubeat_info);
@@ -319,4 +329,5 @@ void category_hooks_init(HANDLE process, const MODULEINFO &jubeat_info);
 category_listing_t *category_hooks_get_listing(uint32_t id);
 
 // used by the extended display grouper thing
-extern int (__cdecl *name_sorter)(const music_info_for_grouping_t *a, const music_info_for_grouping_t *b);
+extern int(__cdecl *name_sorter)(
+    const music_info_for_grouping_t *a, const music_info_for_grouping_t *b);

@@ -1,5 +1,6 @@
 #define LOG_MODULE "ultimate::music_db"
 
+#include <bit>
 #include <cstdint>
 #include <cstdlib>
 
@@ -1005,12 +1006,12 @@ music_db_filtered_list(const char *func, int limit, int *results, music_filter_f
     int found = 0;
 
     // special handler for the "one for every region" やんややんやNight
-    const char* area_code = config_game_get_area_code();
+    const char *area_code = config_game_get_area_code();
     int allowed_yanyan = 80000300; // "Japan" instead of a specific area
     // avoid misconfigured/other region
-    if(area_code && strncmp(area_code, "JP-", 3) == 0) {
+    if (area_code && strncmp(area_code, "JP-", 3) == 0) {
         int code = atoi(&area_code[3]); // returns 0 on failure, which is convenient
-        if(code >= 0 && code <= 47) {
+        if (code >= 0 && code <= 47) {
             allowed_yanyan = 80000300 + code;
         }
     }
@@ -1022,7 +1023,9 @@ music_db_filtered_list(const char *func, int limit, int *results, music_filter_f
             continue;
         }
 
-        if(song->music_id >= 80000300 && song->music_id <= 80000347 && song->music_id != allowed_yanyan) {
+        if (song->music_id >= 80000300 && song->music_id <= 80000347 &&
+            song->music_id != allowed_yanyan)
+        {
             continue;
         }
 
@@ -1098,9 +1101,12 @@ static enum music_load_res music_load_individual(int index, void *node)
     property_node_refer(nullptr, node, "/version", PROP_TYPE_str, tmp, sizeof(tmp));
     song->version = strtoul(tmp, nullptr, 16);
 
-    if (!song->version) {
-        return MUSIC_LOAD_BAD_VER;
-    }
+    // Extend songs use a version of 0, we've now patched anything that might
+    // need nonzero (allll the sorting and grouping functions, for example)
+
+    // if (!song->version) {
+    //     return MUSIC_LOAD_BAD_VER;
+    // }
 
     // sane defaults
     memset(song->genre_list, 0, sizeof(song->genre_list));
@@ -1136,9 +1142,12 @@ static enum music_load_res music_load_individual(int index, void *node)
     property_node_refer(nullptr, node, "/music_type", PROP_TYPE_s32, &song->music_type, 4);
 
     // ultimate music db only has detail_level
-    property_node_refer(nullptr, node, "/detail_level_bsc", PROP_TYPE_float, &song->detail_level_bsc, 4);
-    property_node_refer(nullptr, node, "/detail_level_adv", PROP_TYPE_float, &song->detail_level_adv, 4);
-    property_node_refer(nullptr, node, "/detail_level_ext", PROP_TYPE_float, &song->detail_level_ext, 4);
+    property_node_refer(
+        nullptr, node, "/detail_level_bsc", PROP_TYPE_float, &song->detail_level_bsc, 4);
+    property_node_refer(
+        nullptr, node, "/detail_level_adv", PROP_TYPE_float, &song->detail_level_adv, 4);
+    property_node_refer(
+        nullptr, node, "/detail_level_ext", PROP_TYPE_float, &song->detail_level_ext, 4);
 
     property_node_refer(nullptr, node, "/pos_index", PROP_TYPE_s16, &song->pos_index, 2);
     property_node_refer(nullptr, node, "/is_default", PROP_TYPE_s32, &song->is_default, 4);
@@ -1151,19 +1160,26 @@ static enum music_load_res music_load_individual(int index, void *node)
     property_node_refer(nullptr, node, "/step", PROP_TYPE_s32, &song->step, 4);
     property_node_refer(nullptr, node, "genre/pops", PROP_TYPE_u8, &song->genre_pops, 1);
     property_node_refer(nullptr, node, "genre/anime", PROP_TYPE_u8, &song->genre_anime, 1);
-    property_node_refer(nullptr, node, "genre/socialmusic", PROP_TYPE_u8, &song->genre_socialmusic, 1);
+    property_node_refer(
+        nullptr, node, "genre/socialmusic", PROP_TYPE_u8, &song->genre_socialmusic, 1);
     property_node_refer(nullptr, node, "genre/game", PROP_TYPE_u8, &song->genre_game, 1);
     property_node_refer(nullptr, node, "genre/classic", PROP_TYPE_u8, &song->genre_classical, 1);
     property_node_refer(nullptr, node, "genre/original", PROP_TYPE_u8, &song->genre_original, 1);
     property_node_refer(nullptr, node, "genre/toho", PROP_TYPE_u8, &song->genre_toho, 1);
     property_node_refer(nullptr, node, "/grouping_category", PROP_TYPE_str, tmp, sizeof(tmp));
     property_node_refer(nullptr, node, "/pack_id", PROP_TYPE_s32, &song->pack_id, 4);
-    property_node_refer(nullptr, node, "ultimate/vanilla", PROP_TYPE_u8, &song->ultimate_list_vanilla, 1);
-    property_node_refer(nullptr, node, "ultimate/omnimix", PROP_TYPE_u8, &song->ultimate_list_omnimix, 1);
-    property_node_refer( nullptr, node, "ultimate/jubeat_plus", PROP_TYPE_u8, &song->ultimate_list_jubeat_plus, 1);
-    property_node_refer( nullptr, node, "ultimate/jubeat_2020", PROP_TYPE_u8, &song->ultimate_list_jubeat_2020, 1);
-    property_node_refer(nullptr, node, "ultimate/jukebeat", PROP_TYPE_u8, &song->ultimate_list_jukebeat, 1);
-    property_node_refer(nullptr, node, "ultimate/western", PROP_TYPE_u8, &song->ultimate_list_western, 1);
+    property_node_refer(
+        nullptr, node, "ultimate/vanilla", PROP_TYPE_u8, &song->ultimate_list_vanilla, 1);
+    property_node_refer(
+        nullptr, node, "ultimate/omnimix", PROP_TYPE_u8, &song->ultimate_list_omnimix, 1);
+    property_node_refer(
+        nullptr, node, "ultimate/jubeat_plus", PROP_TYPE_u8, &song->ultimate_list_jubeat_plus, 1);
+    property_node_refer(
+        nullptr, node, "ultimate/jubeat_2020", PROP_TYPE_u8, &song->ultimate_list_jubeat_2020, 1);
+    property_node_refer(
+        nullptr, node, "ultimate/jukebeat", PROP_TYPE_u8, &song->ultimate_list_jukebeat, 1);
+    property_node_refer(
+        nullptr, node, "ultimate/western", PROP_TYPE_u8, &song->ultimate_list_western, 1);
     song->grouping_category = strtoul(tmp, nullptr, 16);
     property_node_refer(
         nullptr, node, "/title_name", PROP_TYPE_str, song->title_name, sizeof(song->title_name));
@@ -1427,16 +1443,8 @@ typedef struct {
 } kata_lookup_t;
 
 static const std::vector<kata_lookup_t> kata_lookup = {
-    {"ァ","オ", 0},
-    {"カ","ゴ", 1},
-    {"サ","ゾ", 2},
-    {"タ","ド", 3},
-    {"ナ","ノ", 4},
-    {"ハ","ポ", 5},
-    {"マ","モ", 6},
-    {"ャ","ヨ", 7},
-    {"ラ","ロ", 8},
-    {"ヮ","ヺ", 9},
+    { "ァ", "オ", 0 }, { "カ", "ゴ", 1 }, { "サ", "ゾ", 2 }, { "タ", "ド", 3 }, { "ナ", "ノ", 4 },
+    { "ハ", "ポ", 5 }, { "マ", "モ", 6 }, { "ャ", "ヨ", 7 }, { "ラ", "ロ", 8 }, { "ヮ", "ヺ", 9 },
 };
 
 static int __cdecl music_db_get_music_name_head_index(int id)
@@ -1463,14 +1471,14 @@ static int __cdecl music_db_get_music_name_head_index(int id)
 
     // unicode values of kana are 3 bytes each, this is an efficiency boost
     // instead of strlen-ing both strings
-    if(strnlen(song->sort_name, 3) < 3) {
+    if (strnlen(song->sort_name, 3) < 3) {
         return 0;
     }
 
-    for(auto &lookup : kata_lookup) {
+    for (auto &lookup : kata_lookup) {
         int start = strncmp(song->sort_name, lookup.start, 3);
         int end = strncmp(song->sort_name, lookup.end, 3);
-        if(start == 0 || end == 0 || (start > 0 && end < 0)) {
+        if (start == 0 || end == 0 || (start > 0 && end < 0)) {
             // it's a bit flag
             return 1 << lookup.result;
         }
@@ -1527,14 +1535,7 @@ static int version_bit_count(int id)
         return 0;
     }
 
-    int bits = 0;
-    while (!((1 << bits) & song->version)) {
-        if (++bits >= 14) {
-            break;
-        }
-    }
-
-    return bits;
+    return std::countr_zero(song->version);
 }
 
 bool __cdecl music_db_is_exists_version_from_ver1(int id)
@@ -1672,11 +1673,11 @@ static bool __cdecl music_db_is_possession_for_contained_music_list(uint8_t flag
             reinterpret_cast<uint8_t *>(dll_dos) + dll_dos->e_lfanew);
         auto section_count = nt_headers->FileHeader.NumberOfSections;
 
-        // iterate sections
-        #pragma GCC diagnostic push
-        #pragma GCC diagnostic ignored "-Wold-style-cast"
+// iterate sections
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wold-style-cast"
         PIMAGE_SECTION_HEADER section_header = IMAGE_FIRST_SECTION(nt_headers);
-        #pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
         for (size_t i = 0; i < section_count; section_header++, i++) {
             auto name = reinterpret_cast<const char *>(section_header->Name);
 

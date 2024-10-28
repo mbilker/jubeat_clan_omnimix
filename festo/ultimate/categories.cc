@@ -8,7 +8,7 @@
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
 
-enum custom_sort_id: uint32_t {
+enum custom_sort_id : uint32_t {
     SORT_CUSTOM_ULTIMATE = SORT_DEFAULT_MAX_ID,
     SORT_CUSTOM_OMNIMIX,
     SORT_CUSTOM_JUBEAT_PLUS,
@@ -55,13 +55,15 @@ enum custom_sort_id: uint32_t {
     SORT_CUSTOM_Z,
 };
 
-static bool __cdecl custom_filter_omnimix(unsigned music_id, int diff, uint8_t level) {
+static bool __cdecl custom_filter_omnimix(unsigned music_id, int diff, uint8_t level)
+{
     music_db_entry_t *music = music_from_id(music_id);
 
     return music->ultimate_list_omnimix;
 }
 
-static bool __cdecl custom_filter_jubeat_plus(unsigned music_id, int diff, uint8_t level) {
+static bool __cdecl custom_filter_jubeat_plus(unsigned music_id, int diff, uint8_t level)
+{
     music_db_entry_t *music = music_from_id(music_id);
 
     return music->ultimate_list_jubeat_plus;
@@ -73,27 +75,31 @@ static bool __cdecl custom_filter_jubeat_plus(unsigned music_id, int diff, uint8
 //     return music->ultimate_list_jubeat_2020;
 // }
 
-static bool __cdecl custom_filter_jukebeat(unsigned music_id, int diff, uint8_t level) {
+static bool __cdecl custom_filter_jukebeat(unsigned music_id, int diff, uint8_t level)
+{
     music_db_entry_t *music = music_from_id(music_id);
 
     return music->ultimate_list_jukebeat;
 }
 
-static bool __cdecl custom_filter_western(unsigned music_id, int diff, uint8_t level) {
+static bool __cdecl custom_filter_western(unsigned music_id, int diff, uint8_t level)
+{
     music_db_entry_t *music = music_from_id(music_id);
 
     return music->ultimate_list_jukebeat || music->ultimate_list_western;
 }
 
-static bool __cdecl custom_filter_0_9(unsigned music_id, int diff, uint8_t level) {
+static bool __cdecl custom_filter_0_9(unsigned music_id, int diff, uint8_t level)
+{
     music_db_entry_t *music = music_from_id(music_id);
     return music->sort_name[0] >= '0' && music->sort_name[0] <= '9';
 }
 
-#define MAKE_ALPHABET_SORTER(letter, chr) \
-    static bool __cdecl custom_filter_ ## letter(unsigned music_id, int diff, uint8_t level) { \
-        music_db_entry_t *music = music_from_id(music_id); \
-        return music->sort_name[0] == chr; \
+#define MAKE_ALPHABET_SORTER(letter, chr)                                                          \
+    static bool __cdecl custom_filter_##letter(unsigned music_id, int diff, uint8_t level)         \
+    {                                                                                              \
+        music_db_entry_t *music = music_from_id(music_id);                                         \
+        return music->sort_name[0] == chr;                                                         \
     }
 
 MAKE_ALPHABET_SORTER(a, 'a')
@@ -123,6 +129,7 @@ MAKE_ALPHABET_SORTER(x, 'x')
 MAKE_ALPHABET_SORTER(y, 'y')
 MAKE_ALPHABET_SORTER(z, 'z')
 
+// clang-format off
 const std::vector<category_hierarchy_t> extra_category_hierarchy = {
     {SORT_CUSTOM_ULTIMATE,    SORT_ROOT,            NULL,                      "UL_ROOT.png", NULL, NULL},
     {SORT_CUSTOM_OMNIMIX,     SORT_CUSTOM_ULTIMATE, custom_filter_omnimix,     "UL_SORT_GAME_OMNI.png", NULL, NULL},
@@ -323,55 +330,222 @@ const std::vector<grouping_textures_t> extra_group_textures = {
     {GROUP_CUSTOM_OTHER, "UL_GROUP_OTHER.png", NULL, NULL},
 };
 
-uint32_t __fastcall category_group_fn_alphabet(enum group_type group_type, const music_info_for_grouping_t *info) {
-    if(group_type != GROUP_TYPE_NAME || !info) {
+const std::vector<hierarchy_texture_t> extra_hierarchy_textures = {
+    // defaults
+    {SORT_ROOT,                     SORT_NULL,                 0, nullptr},
+    {SORT_ALL,                      SORT_ROOT,                 2, "smm_t8200"},
+    {SORT_YOU_MIGHT_LIKE,           SORT_ROOT,                 2, "smm_t8890"},
+    {SORT_CATEGORY_GENRE,           SORT_ROOT,                 1, "smm_t8500"},
+    {SORT_POPS,                     SORT_CATEGORY_GENRE,       2, "smm_t8516"},
+    {SORT_ANIME,                    SORT_CATEGORY_GENRE,       2, "smm_t8512"},
+    {SORT_SOCIAL_MUSIC,             SORT_CATEGORY_GENRE,       2, "smm_t8519"},
+    {SORT_GAME,                     SORT_CATEGORY_GENRE,       2, "smm_t8517"},
+    {SORT_CLASSIC,                  SORT_CATEGORY_GENRE,       2, "smm_t8518"},
+    {SORT_ORIGINAL,                 SORT_CATEGORY_GENRE,       2, "smm_t8515"},
+    {SORT_TOUHOU_ARRANGE,           SORT_CATEGORY_GENRE,       2, "smm_t8520"},
+    {SORT_CATEGORY_LEVEL,           SORT_ROOT,                 1, "smm_t8400"},
+    {SORT_LEVEL1,                   SORT_CATEGORY_LEVEL,       2, "smm_t8410"},
+    {SORT_LEVEL2,                   SORT_CATEGORY_LEVEL,       2, "smm_t8411"},
+    {SORT_LEVEL3,                   SORT_CATEGORY_LEVEL,       2, "smm_t8412"},
+    {SORT_LEVEL4,                   SORT_CATEGORY_LEVEL,       2, "smm_t8413"},
+    {SORT_LEVEL5,                   SORT_CATEGORY_LEVEL,       2, "smm_t8414"},
+    {SORT_LEVEL6,                   SORT_CATEGORY_LEVEL,       2, "smm_t8415"},
+    {SORT_LEVEL7,                   SORT_CATEGORY_LEVEL,       2, "smm_t8416"},
+    {SORT_LEVEL8,                   SORT_CATEGORY_LEVEL,       2, "smm_t8417"},
+    {SORT_LEVEL9,                   SORT_CATEGORY_LEVEL,       2, "smm_t8418"},
+    {SORT_LEVEL10,                  SORT_CATEGORY_LEVEL,       2, "smm_t8419"},
+    {SORT_CATEGORY_NAME,            SORT_ROOT,                 1, "smm_t8300"},
+    {SORT_JP_A,                     SORT_CATEGORY_NAME,        2, "smm_t8310"},
+    {SORT_JP_KA,                    SORT_CATEGORY_NAME,        2, "smm_t8311"},
+    {SORT_JP_SA,                    SORT_CATEGORY_NAME,        2, "smm_t8312"},
+    {SORT_JP_TA,                    SORT_CATEGORY_NAME,        2, "smm_t8313"},
+    {SORT_JP_NA,                    SORT_CATEGORY_NAME,        2, "smm_t8314"},
+    {SORT_JP_HA,                    SORT_CATEGORY_NAME,        2, "smm_t8315"},
+    {SORT_JP_MA,                    SORT_CATEGORY_NAME,        2, "smm_t8316"},
+    {SORT_JP_YA,                    SORT_CATEGORY_NAME,        2, "smm_t8317"},
+    {SORT_JP_RA,                    SORT_CATEGORY_NAME,        2, "smm_t8318"},
+    {SORT_JP_WA,                    SORT_CATEGORY_NAME,        2, "smm_t8319"},
+    {SORT_HOLD,                     SORT_ROOT,                 2, "smm_t8860"},
+    {SORT_IS_NEW,                   SORT_ROOT,                 2, "smm_t8114"},
+    {SORT_NATIONAL_POPULAR,         SORT_ROOT,                 2, "smm_t8111"},
+    {SORT_FULLCOMBO_CHALLENGE,      SORT_ROOT,                 2, "smm_t8600"},
+    {SORT_CATEGORY_PERFORMANCE,     SORT_ROOT,                 1, "smm_t8700"},
+    {SORT_UNPLAYED,                 SORT_CATEGORY_PERFORMANCE, 2, "smm_t8710"},
+    {SORT_NOT_FULL_COMBO,           SORT_CATEGORY_PERFORMANCE, 2, "smm_t8720"},
+    {SORT_HAS_FULL_COMBO,           SORT_CATEGORY_PERFORMANCE, 2, "smm_t8721"},
+    {SORT_SOME_GRAY,                SORT_CATEGORY_PERFORMANCE, 2, "smm_t8730"},
+    {SORT_NO_GRAY,                  SORT_CATEGORY_PERFORMANCE, 2, "smm_t8731"},
+    {SORT_NOT_ALL_YELLOW,           SORT_CATEGORY_PERFORMANCE, 2, "smm_t8732"},
+    {SORT_HAS_ALL_YELLOW,           SORT_CATEGORY_PERFORMANCE, 2, "smm_t8733"},
+    {SORT_RANK_E,                   SORT_CATEGORY_PERFORMANCE, 2, "smm_t8740"},
+    {SORT_RANK_D,                   SORT_CATEGORY_PERFORMANCE, 2, "smm_t8741"},
+    {SORT_RANK_C,                   SORT_CATEGORY_PERFORMANCE, 2, "smm_t8742"},
+    {SORT_RANK_B,                   SORT_CATEGORY_PERFORMANCE, 2, "smm_t8743"},
+    {SORT_RANK_A,                   SORT_CATEGORY_PERFORMANCE, 2, "smm_t8744"},
+    {SORT_RANK_S,                   SORT_CATEGORY_PERFORMANCE, 2, "smm_t8745"},
+    {SORT_RANK_SS,                  SORT_CATEGORY_PERFORMANCE, 2, "smm_t8746"},
+    {SORT_RANK_SSS,                 SORT_CATEGORY_PERFORMANCE, 2, "smm_t8747"},
+    {SORT_RANK_EXC,                 SORT_CATEGORY_PERFORMANCE, 2, "smm_t8748"},
+    {SORT_MYBEST,                   SORT_ROOT,                 2, "smm_t8113"},
+    {SORT_CATEGORY_TOURNAMENT,      SORT_ROOT,                 1, "smm_t8800"},
+    {SORT_TOURNAMENT_1,             SORT_CATEGORY_TOURNAMENT,  2, "smm_t8810"},
+    {SORT_TOURNAMENT_2,             SORT_CATEGORY_TOURNAMENT,  2, "smm_t8810"},
+    {SORT_TOURNAMENT_3,             SORT_CATEGORY_TOURNAMENT,  2, "smm_t8810"},
+    {SORT_TOURNAMENT_4,             SORT_CATEGORY_TOURNAMENT,  2, "smm_t8810"},
+    {SORT_TOURNAMENT_5,             SORT_CATEGORY_TOURNAMENT,  2, "smm_t8810"},
+    {SORT_CATEGORY_JUBEAT_LAB,      SORT_ROOT,                 1, "smm_t8820"},
+    {SORT_LAB_MY_LIST,              SORT_CATEGORY_JUBEAT_LAB,  2, "smm_t8830"},
+    {SORT_LAB_DOWNLOAD_RANKING,     SORT_CATEGORY_JUBEAT_LAB,  2, "smm_t8832"},
+    {SORT_LAB_PLAYCOUNT_RANKING,    SORT_CATEGORY_JUBEAT_LAB,  2, "smm_t8831"},
+    {SORT_LAB_GOOD_CHART_RANKING,   SORT_CATEGORY_JUBEAT_LAB,  2, "smm_t8833"},
+    {SORT_IS_WEEKLY_TARGET,         SORT_ROOT,                 2, "smm_t8116"},
+    {SORT_CATEGORY_VERSION,         SORT_ROOT,                 1, "smm_t8420"},
+    {SORT_VER_jubeat,               SORT_CATEGORY_VERSION,     2, "smm_t8430"},
+    {SORT_VER_ripples,              SORT_CATEGORY_VERSION,     2, "smm_t8431"},
+    {SORT_VER_knit,                 SORT_CATEGORY_VERSION,     2, "smm_t8432"},
+    {SORT_VER_copious,              SORT_CATEGORY_VERSION,     2, "smm_t8433"},
+    {SORT_VER_saucer,               SORT_CATEGORY_VERSION,     2, "smm_t8434"},
+    {SORT_VER_saucer_fulfill,       SORT_CATEGORY_VERSION,     2, "smm_t8435"},
+    {SORT_VER_prop,                 SORT_CATEGORY_VERSION,     2, "smm_t8436"},
+    {SORT_VER_Qubell,               SORT_CATEGORY_VERSION,     2, "smm_t8437"},
+    {SORT_VER_clan,                 SORT_CATEGORY_VERSION,     2, "smm_t8438"},
+    {SORT_VER_festo,                SORT_CATEGORY_VERSION,     2, "smm_t8439"},
+    {SORT_CATEGORY_ARTIST,          SORT_ROOT,                 1, "smm_t8320"},
+    {SORT_ARTIST_Sota_Fujimori,     SORT_CATEGORY_ARTIST,      2, "smm_t8330"},
+    {SORT_ARTIST_DJ_YOSHITAKA,      SORT_CATEGORY_ARTIST,      2, "smm_t8331"},
+    {SORT_ARTIST_Nekomata_Master,   SORT_CATEGORY_ARTIST,      2, "smm_t8332"},
+    {SORT_ARTIST_TAG,               SORT_CATEGORY_ARTIST,      2, "smm_t8333"},
+    {SORT_ARTIST_wac,               SORT_CATEGORY_ARTIST,      2, "smm_t8334"},
+    {SORT_ARTIST_LED,               SORT_CATEGORY_ARTIST,      2, "smm_t8335"},
+    {SORT_ARTIST_Hinabita,          SORT_CATEGORY_ARTIST,      2, "smm_t8336"},
+    {SORT_ARTIST_Akhuta,            SORT_CATEGORY_ARTIST,      2, "smm_t8337"},
+    {SORT_ARTIST_Tomoaki_Hirono,    SORT_CATEGORY_ARTIST,      2, "smm_t8338"},
+    {SORT_ARTIST_S_C_U,             SORT_CATEGORY_ARTIST,      2, "smm_t8339"},
+    {SORT_ARTIST_Ryu,               SORT_CATEGORY_ARTIST,      2, "smm_t8340"},
+    {SORT_ARTIST_kors_k,            SORT_CATEGORY_ARTIST,      2, "smm_t8341"},
+    {SORT_ARTIST_dj_TAKA,           SORT_CATEGORY_ARTIST,      2, "smm_t8342"},
+    {SORT_ARTIST_DJ_TOTTO,          SORT_CATEGORY_ARTIST,      2, "smm_t8343"},
+    {SORT_ARTIST_Mutsuhiko_Izumi,   SORT_CATEGORY_ARTIST,      2, "smm_t8344"},
+    {SORT_ARTIST_Yoshihiko_Koezuka, SORT_CATEGORY_ARTIST,      2, "smm_t8345"},
+    {SORT_ARTIST_TOMOSUKE,          SORT_CATEGORY_ARTIST,      2, "smm_t8346"},
+    {SORT_ARTIST_Asaki,             SORT_CATEGORY_ARTIST,      2, "smm_t8347"},
+    {SORT_ARTIST_seiya_murai,       SORT_CATEGORY_ARTIST,      2, "smm_t8348"},
+    {SORT_ARTIST_PON,               SORT_CATEGORY_ARTIST,      2, "smm_t8349"},
+    {SORT_ARTIST_Qrispy_Joybox,     SORT_CATEGORY_ARTIST,      2, "smm_t8350"},
+    {SORT_ARTIST_GUHROOVY,          SORT_CATEGORY_ARTIST,      2, "smm_t8351"},
+    {SORT_ARTIST_U1_ASAMi,          SORT_CATEGORY_ARTIST,      2, "smm_t8352"},
+    {SORT_ARTIST_Hommarju,          SORT_CATEGORY_ARTIST,      2, "smm_t8353"},
+    {SORT_ARTIST_ARM,               SORT_CATEGORY_ARTIST,      2, "smm_t8354"},
+    {SORT_ARTIST_AOP,               SORT_CATEGORY_ARTIST,      2, "smm_t8355"},
+    {SORT_ARTIST_NEKOHIROKI,        SORT_CATEGORY_ARTIST,      2, "smm_t8356"},
+    {SORT_ARTIST_Mayumi_Morinaga,   SORT_CATEGORY_ARTIST,      2, "smm_t8357"},
+    {SORT_SHOP,                     SORT_ROOT,                 1, nullptr},
+    {SORT_PJ_MATCH,                 SORT_ROOT,                 1, nullptr},
+    {SORT_TUNE_RUN,                 SORT_ROOT,                 1, nullptr},
+    {SORT_TUNE_RUN_1,               SORT_ROOT,                 1, nullptr},
+    {SORT_TUNE_RUN_2,               SORT_ROOT,                 2, "smm_t8104"},
+    {SORT_TARGET_MUSIC,             SORT_ROOT,                 2, "smm_t8840"},
+    {SORT_THIS_WEEK_RECOMMENDED,    SORT_ROOT,                 2, "smm_t8105"},
+
+    // ultimate
+    // NOTE: 64 byte buffers used for {name}_ja.png expansion
+    {SORT_CUSTOM_ULTIMATE,          SORT_ROOT,                 1, "ul_arch_ultimate"},
+    {SORT_CUSTOM_OMNIMIX,           SORT_CUSTOM_ULTIMATE,      2, "ul_arch_omnimix"},
+    {SORT_CUSTOM_JUBEAT_PLUS,       SORT_CUSTOM_ULTIMATE,      2, "ul_arch_jubeat_plus"},
+    {SORT_CUSTOM_JUKEBEAT,          SORT_CUSTOM_ULTIMATE,      2, "ul_arch_jukebeat"},
+    {SORT_CUSTOM_WESTERN,           SORT_CUSTOM_ULTIMATE,      2, "ul_arch_western"},
+    {SORT_CUSTOM_ABC,               SORT_ROOT,                 1, nullptr},
+    {SORT_CUSTOM_DEF,               SORT_ROOT,                 1, nullptr},
+    {SORT_CUSTOM_GHI,               SORT_ROOT,                 1, nullptr},
+    {SORT_CUSTOM_JKL,               SORT_ROOT,                 1, nullptr},
+    {SORT_CUSTOM_MNO,               SORT_ROOT,                 1, nullptr},
+    {SORT_CUSTOM_PQRS,              SORT_ROOT,                 1, nullptr},
+    {SORT_CUSTOM_TUV,               SORT_ROOT,                 1, nullptr},
+    {SORT_CUSTOM_WXYZ,              SORT_ROOT,                 1, nullptr},
+    {SORT_CUSTOM_0_9,               SORT_CATEGORY_NAME,        2, "ul_arch_0_9"},
+    {SORT_CUSTOM_A,                 SORT_CATEGORY_NAME,        2, "ul_arch_a"},
+    {SORT_CUSTOM_B,                 SORT_CATEGORY_NAME,        2, "ul_arch_b"},
+    {SORT_CUSTOM_C,                 SORT_CATEGORY_NAME,        2, "ul_arch_c"},
+    {SORT_CUSTOM_D,                 SORT_CATEGORY_NAME,        2, "ul_arch_d"},
+    {SORT_CUSTOM_E,                 SORT_CATEGORY_NAME,        2, "ul_arch_e"},
+    {SORT_CUSTOM_F,                 SORT_CATEGORY_NAME,        2, "ul_arch_f"},
+    {SORT_CUSTOM_G,                 SORT_CATEGORY_NAME,        2, "ul_arch_g"},
+    {SORT_CUSTOM_H,                 SORT_CATEGORY_NAME,        2, "ul_arch_h"},
+    {SORT_CUSTOM_I,                 SORT_CATEGORY_NAME,        2, "ul_arch_i"},
+    {SORT_CUSTOM_J,                 SORT_CATEGORY_NAME,        2, "ul_arch_j"},
+    {SORT_CUSTOM_K,                 SORT_CATEGORY_NAME,        2, "ul_arch_k"},
+    {SORT_CUSTOM_L,                 SORT_CATEGORY_NAME,        2, "ul_arch_l"},
+    {SORT_CUSTOM_M,                 SORT_CATEGORY_NAME,        2, "ul_arch_m"},
+    {SORT_CUSTOM_N,                 SORT_CATEGORY_NAME,        2, "ul_arch_n"},
+    {SORT_CUSTOM_O,                 SORT_CATEGORY_NAME,        2, "ul_arch_o"},
+    {SORT_CUSTOM_P,                 SORT_CATEGORY_NAME,        2, "ul_arch_p"},
+    {SORT_CUSTOM_Q,                 SORT_CATEGORY_NAME,        2, "ul_arch_q"},
+    {SORT_CUSTOM_R,                 SORT_CATEGORY_NAME,        2, "ul_arch_r"},
+    {SORT_CUSTOM_S,                 SORT_CATEGORY_NAME,        2, "ul_arch_s"},
+    {SORT_CUSTOM_T,                 SORT_CATEGORY_NAME,        2, "ul_arch_t"},
+    {SORT_CUSTOM_U,                 SORT_CATEGORY_NAME,        2, "ul_arch_u"},
+    {SORT_CUSTOM_V,                 SORT_CATEGORY_NAME,        2, "ul_arch_v"},
+    {SORT_CUSTOM_W,                 SORT_CATEGORY_NAME,        2, "ul_arch_w"},
+    {SORT_CUSTOM_X,                 SORT_CATEGORY_NAME,        2, "ul_arch_x"},
+    {SORT_CUSTOM_Y,                 SORT_CATEGORY_NAME,        2, "ul_arch_y"},
+    {SORT_CUSTOM_Z,                 SORT_CATEGORY_NAME,        2, "ul_arch_z"},
+};
+
+// clang-format on
+
+uint32_t __fastcall category_group_fn_alphabet(
+    enum group_type group_type, const music_info_for_grouping_t *info)
+{
+    if (group_type != GROUP_TYPE_NAME || !info) {
         return GROUP_INVALID;
     }
     auto song = music_from_id(info->id);
     auto first = song->sort_name[0];
 
-    if(first >= '0' && first <= '9') {
+    if (first >= '0' && first <= '9') {
         return GROUP_CUSTOM_0_9;
-    } else if(first >= 'a' && first <= 'c') {
+    } else if (first >= 'a' && first <= 'c') {
         return GROUP_CUSTOM_ABC;
-    } else if(first >= 'd' && first <= 'f') {
+    } else if (first >= 'd' && first <= 'f') {
         return GROUP_CUSTOM_DEF;
-    } else if(first >= 'g' && first <= 'i') {
+    } else if (first >= 'g' && first <= 'i') {
         return GROUP_CUSTOM_GHI;
-    } else if(first >= 'j' && first <= 'l') {
+    } else if (first >= 'j' && first <= 'l') {
         return GROUP_CUSTOM_JKL;
-    } else if(first >= 'm' && first <= 'o') {
+    } else if (first >= 'm' && first <= 'o') {
         return GROUP_CUSTOM_MNO;
-    } else if(first >= 'p' && first <= 's') {
+    } else if (first >= 'p' && first <= 's') {
         return GROUP_CUSTOM_PQRS;
-    } else if(first >= 't' && first <= 'v') {
+    } else if (first >= 't' && first <= 'v') {
         return GROUP_CUSTOM_TUV;
-    } else if(first >= 'w' && first <= 'z') {
+    } else if (first >= 'w' && first <= 'z') {
         return GROUP_CUSTOM_WXYZ;
     }
 
     return GROUP_INVALID;
 }
 
-uint32_t __fastcall category_group_fn_genre_custom(enum group_type group_type, const music_info_for_grouping_t *info) {
-    if(group_type != GROUP_TYPE_GENRE || !info) {
+uint32_t __fastcall category_group_fn_genre_custom(
+    enum group_type group_type, const music_info_for_grouping_t *info)
+{
+    if (group_type != GROUP_TYPE_GENRE || !info) {
         return GROUP_INVALID;
     }
     auto song = music_from_id(info->id);
 
-    if(song->genre_pops == GENRE_PRIMARY) {
+    if (song->genre_pops == GENRE_PRIMARY) {
         return GROUP_POPS;
-    } else if(song->genre_anime == GENRE_PRIMARY) {
+    } else if (song->genre_anime == GENRE_PRIMARY) {
         return GROUP_ANIME;
-    } else if(song->genre_socialmusic == GENRE_PRIMARY) {
+    } else if (song->genre_socialmusic == GENRE_PRIMARY) {
         return GROUP_SOCIAL_MUSIC;
-    } else if(song->genre_toho == GENRE_PRIMARY) {
+    } else if (song->genre_toho == GENRE_PRIMARY) {
         return GROUP_TOUHOU_ARRANGE;
-    } else if(song->genre_game == GENRE_PRIMARY) {
+    } else if (song->genre_game == GENRE_PRIMARY) {
         return GROUP_GAME;
-    } else if(song->genre_classical == GENRE_PRIMARY) {
+    } else if (song->genre_classical == GENRE_PRIMARY) {
         return GROUP_CLASSIC;
-    } else if(song->genre_original == GENRE_PRIMARY) {
+    } else if (song->genre_original == GENRE_PRIMARY) {
         return GROUP_ORIGINAL;
     } else {
         // only change: don't dump genre-less songs into Pops (2)
@@ -379,20 +553,22 @@ uint32_t __fastcall category_group_fn_genre_custom(enum group_type group_type, c
     }
 }
 
-uint32_t __fastcall category_group_fn_version_custom(enum group_type group_type, const music_info_for_grouping_t *info) {
-    if(group_type != GROUP_TYPE_VERSION || !info) {
+uint32_t __fastcall category_group_fn_version_custom(
+    enum group_type group_type, const music_info_for_grouping_t *info)
+{
+    if (group_type != GROUP_TYPE_VERSION || !info) {
         return GROUP_INVALID;
     }
     auto song = music_from_id(info->id);
 
-    if(song->ultimate_list_omnimix) {
+    if (song->ultimate_list_omnimix) {
         // omni songs can just fall into their original version
         return GROUP_INVALID;
-    } else if(song->ultimate_list_jubeat_plus) {
+    } else if (song->ultimate_list_jubeat_plus) {
         return GROUP_CUSTOM_JUBEAT_PLUS;
-    } else if(song->ultimate_list_jubeat_2020) {
+    } else if (song->ultimate_list_jubeat_2020) {
         return GROUP_CUSTOM_JUBEAT_2020;
-    } else if(song->ultimate_list_jukebeat) {
+    } else if (song->ultimate_list_jukebeat) {
         return GROUP_CUSTOM_JUKEBEAT;
     }
 
@@ -400,72 +576,74 @@ uint32_t __fastcall category_group_fn_version_custom(enum group_type group_type,
     return GROUP_INVALID;
 }
 
-
 // Compare functions used to sort the music display list - we add extra
 // categories to version and genre, so we need to replicate them both
 
-static int version_rank(int mid) {
+static int version_rank(int mid)
+{
     auto song = music_from_id(mid);
 
-    if(song->ultimate_list_jubeat_plus) {
+    if (song->ultimate_list_jubeat_plus) {
         return 16;
-    } else if(song->ultimate_list_jubeat_2020) {
+    } else if (song->ultimate_list_jubeat_2020) {
         return 15;
-    } else if(song->ultimate_list_jukebeat) {
+    } else if (song->ultimate_list_jukebeat) {
         return 14;
-    // copied from game
-    } else if(music_db_is_exists_version_from_ver9(mid)) {
+        // copied from game
+    } else if (music_db_is_exists_version_from_ver9(mid)) {
         return 13;
-    } else if(music_db_is_exists_version_from_ver8(mid)) {
+    } else if (music_db_is_exists_version_from_ver8(mid)) {
         return 12;
-    } else if(music_db_is_exists_version_from_ver7(mid)) {
+    } else if (music_db_is_exists_version_from_ver7(mid)) {
         return 11;
-    } else if(music_db_is_exists_version_from_ver6(mid)) {
+    } else if (music_db_is_exists_version_from_ver6(mid)) {
         return 10;
-    } else if(music_db_is_exists_version_from_ver5_5(mid)) {
+    } else if (music_db_is_exists_version_from_ver5_5(mid)) {
         return 9;
-    } else if(music_db_is_exists_version_from_ver5(mid)) {
+    } else if (music_db_is_exists_version_from_ver5(mid)) {
         return 8;
-    } else if(music_db_is_exists_version_from_ver4(mid)) {
+    } else if (music_db_is_exists_version_from_ver4(mid)) {
         return 6;
-    } else if(music_db_is_exists_version_from_ver3(mid)) {
+    } else if (music_db_is_exists_version_from_ver3(mid)) {
         return 4;
-    } else if(music_db_is_exists_version_from_ver2(mid)) {
+    } else if (music_db_is_exists_version_from_ver2(mid)) {
         return 2;
     } else {
         return 0;
     }
 }
 
-int __cdecl version_sorter(const music_info_for_grouping_t *a, const music_info_for_grouping_t *b) {
+int __cdecl version_sorter(const music_info_for_grouping_t *a, const music_info_for_grouping_t *b)
+{
     int a_rank = version_rank(a->id);
     int b_rank = version_rank(b->id);
 
-    if(a_rank < b_rank) {
+    if (a_rank < b_rank) {
         return -1;
-    } else if(a_rank > b_rank) {
+    } else if (a_rank > b_rank) {
         return 1;
     } else {
         return name_sorter(a, b);
     }
 }
 
-static int genre_rank(int mid) {
+static int genre_rank(int mid)
+{
     auto song = music_from_id(mid);
     // comparing to 2 (not just truthiness) is what the game does
-    if(song->genre_pops == GENRE_PRIMARY) {
+    if (song->genre_pops == GENRE_PRIMARY) {
         return 1;
-    } else if(song->genre_anime == GENRE_PRIMARY) {
+    } else if (song->genre_anime == GENRE_PRIMARY) {
         return 2;
-    } else if(song->genre_socialmusic == GENRE_PRIMARY) {
+    } else if (song->genre_socialmusic == GENRE_PRIMARY) {
         return 3;
-    } else if(song->genre_toho == GENRE_PRIMARY) {
+    } else if (song->genre_toho == GENRE_PRIMARY) {
         return 4;
-    } else if(song->genre_game == GENRE_PRIMARY) {
+    } else if (song->genre_game == GENRE_PRIMARY) {
         return 5;
-    } else if(song->genre_classical == GENRE_PRIMARY) {
+    } else if (song->genre_classical == GENRE_PRIMARY) {
         return 6;
-    } else if(song->genre_original == GENRE_PRIMARY) {
+    } else if (song->genre_original == GENRE_PRIMARY) {
         return 7;
     } else {
         // this is the only place we differ - fallback to "Other" at end of list
@@ -473,13 +651,14 @@ static int genre_rank(int mid) {
     }
 }
 
-int __cdecl genre_sorter(const music_info_for_grouping_t *a, const music_info_for_grouping_t *b) {
+int __cdecl genre_sorter(const music_info_for_grouping_t *a, const music_info_for_grouping_t *b)
+{
     int a_rank = genre_rank(a->id);
     int b_rank = genre_rank(b->id);
 
-    if(a_rank < b_rank) {
+    if (a_rank < b_rank) {
         return -1;
-    } else if(a_rank > b_rank) {
+    } else if (a_rank > b_rank) {
         return 1;
     } else {
         return name_sorter(a, b);

@@ -27,8 +27,8 @@
 #include "categories.h"
 #include "category_hooks.h"
 #include "music_db.h"
-#include "sound.h"
 #include "pkfs.h"
+#include "sound.h"
 
 #include "../common/bnr_hook.h"
 #include "../common/festo.h"
@@ -78,7 +78,7 @@ static int stack_replacer[MAX_SONGS];
 static const uintptr_t mdb_arr_patch = reinterpret_cast<uintptr_t>(stack_replacer);
 
 // it has one for each of the 3 difficulties
-static uint8_t score_stack_replacer[MAX_SONGS*3][20];
+static uint8_t score_stack_replacer[MAX_SONGS * 3][20];
 static const uintptr_t score_arr_patch = reinterpret_cast<uintptr_t>(score_stack_replacer);
 // the asm to replace needs the end of the array
 static const uintptr_t end_score_arr_patch =
@@ -224,6 +224,10 @@ static std::vector<const char *> EXTRA_CATEGORIES {
     "L44FO_SMC_MM_TEXT_UL",
 };
 
+// ultimate hierarchies
+static std::vector<const char *> EXTRA_HIERARCHIES {
+    "L44FO_SMC_MM_HIERARCHY_UL",
+};
 
 // clang-format on
 
@@ -390,6 +394,7 @@ bool __cdecl ultimate_dll_entry_init(char *sid_code, void *app_config)
     bnr_hook_add_paths("L44_BNR_BIG_ID99999999", BNR_TEXTURES);
     bnr_hook_add_paths("L44_TM_BANNER", EXTRA_MARKERS);
     bnr_hook_add_paths("L44FO_SMC_MM_TEXT_JA", EXTRA_CATEGORIES);
+    bnr_hook_add_paths("L44FO_SMC_MM_HIERARCHY_JA", EXTRA_HIERARCHIES);
     festo_apply_common_patches(process, jubeat_handle, jubeat_info, music_db_info);
 
     // category stuff

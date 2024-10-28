@@ -16,7 +16,7 @@ extern "C" {
 
 void hook_music_db(HANDLE process, HMODULE jubeat_handle, HMODULE music_db_handle);
 
-enum genre_type: uint8_t {
+enum genre_type : uint8_t {
     GENRE_NOT_IN = 0,
     // the song is in this genre
     GENRE_SECONDARY = 1,
@@ -35,7 +35,7 @@ struct music_db_entry_t {
     float bpm_max;
     float bpm_min;
     int music_type;
-    int version;
+    unsigned int version;
     int16_t pos_index;
     int index_start;
     int is_default;         // was: char
