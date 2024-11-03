@@ -364,16 +364,19 @@ void category_hooks_init(HANDLE process, const MODULEINFO &jubeat_info)
         reinterpret_cast<uintptr_t>(hierarchy_textures_end);
     const uintptr_t hierarchy_textures_end_new_loc = reinterpret_cast<uintptr_t>(
         extra_hierarchy_textures.data() + extra_hierarchy_textures.size());
-    do_patch(
-        process,
-        jubeat_info,
-        {
-            .name = "hierarchy textures (end)",
-            // cmp eax, offset aAssertionFailed
-            .pattern = { 0x3D, U32_TO_CONST_BYTES_LE(hierarchy_textures_end_loc) },
-            .data = { U32_TO_CONST_BYTES_LE(hierarchy_textures_end_new_loc) },
-            .data_offset = 1,
-        });
+    // 8 of these too
+    for (int i = 0; i < 8; i++) {
+        do_patch(
+            process,
+            jubeat_info,
+            {
+                .name = "hierarchy textures (end)",
+                // cmp eax, offset aAssertionFailed
+                .pattern = { 0x3D, U32_TO_CONST_BYTES_LE(hierarchy_textures_end_loc) },
+                .data = { U32_TO_CONST_BYTES_LE(hierarchy_textures_end_new_loc) },
+                .data_offset = 1,
+            });
+    }
 
     init_done = true;
 }

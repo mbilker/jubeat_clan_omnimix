@@ -184,13 +184,15 @@ const std::vector<category_listing_t> extra_category_layout = {
     // Ultimate invalidates a lot of existing categories and adds our own.
     // Custom categories are prepended to the list, so we can totally replace
     // them by fully specifying it here
-    {SORT_ROOT, 5, {
+    {SORT_ROOT, 7, {
         // SORT_ROOT in SORT_ROOT is the "Select a category" icon
         {SORT_ROOT, SORT_CUSTOM_ULTIMATE, SORT_CUSTOM_WESTERN},
         {SORT_ALL, SORT_CATEGORY_VERSION, SORT_CATEGORY_GENRE},
         {SORT_CATEGORY_LEVEL, SORT_CATEGORY_NAME, SORT_CATEGORY_ARTIST},
-        {SORT_HOLD, SORT_TARGET_MUSIC, SORT_THIS_WEEK_RECOMMENDED},
-        {SORT_TUNE_RUN},
+        {SORT_TARGET_MUSIC, SORT_HOLD, SORT_FULLCOMBO_CHALLENGE},
+        {SORT_CATEGORY_PERFORMANCE, SORT_MYBEST, SORT_YOU_MIGHT_LIKE},
+        {SORT_THIS_WEEK_RECOMMENDED, SORT_NATIONAL_POPULAR, SORT_TUNE_RUN},
+        {SORT_IS_NEW},
     }},
     {SORT_CATEGORY_VERSION, 5, {
         {SORT_NULL, SORT_VER_jubeat, SORT_VER_ripples},
